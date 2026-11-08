@@ -1,0 +1,34 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "$id":"https://example.invalid/savr/record.schema.v1.1.json",
+ "title":"SAVR Registry Record v1.1",
+ "type":"object",
+ "additionalProperties":false,
+ "required":["schema_version","serial_number","tamper_label_number","certificate_type","category","registry_status","is_demo","signer_creator","item_description","image_url","nfc_uid_hex","analysis_result","confidence_level","issuer_decision","issue_date","verification_notes"],
+ "properties":{
+  "schema_version":{"const":"1.1.0"},
+  "serial_number":{"type":"string","pattern":"^SAVR-[0-9]{6}$"},
+  "tamper_label_number":{"type":"string","pattern":"^SAVR-T[0-9]{6}$"},
+  "certificate_type":{"enum":["signature_authentication","artifact_verification"]},
+  "category":{"enum":["Sports","Music & Entertainment","Film & TV","Art & Collectibles","Historical & Cultural"]},
+  "registry_status":{"enum":["authenticated","verified_artifact","pending","withdrawn"]},
+  "is_demo":{"type":"boolean"},
+  "signer_creator":{"type":"string"},
+  "item_description":{"type":"string"},
+  "image_url":{"type":["string","null"]},
+  "nfc_uid_hex":{"type":["string","null"],"pattern":"^[A-Fa-f0-9]{14}$"},
+  "analysis_result":{"type":"string"},
+  "confidence_level":{"type":"string"},
+  "signature_analysis":{"type":"object","additionalProperties":false,"required":["slant_angle","flow_speed","baseline_alignment","terminal_strokes","letterform_construction","limitations"],"properties":{"slant_angle":{"type":"string"},"flow_speed":{"type":"string"},"baseline_alignment":{"type":"string"},"terminal_strokes":{"type":"string"},"letterform_construction":{"type":"string"},"limitations":{"type":"string"}}},
+  "provenance_dossier":{"type":"object","additionalProperties":false,"required":["era_date","material_medium","condition_notes","provenance_summary","identifying_marks"],"properties":{"era_date":{"type":"string"},"material_medium":{"type":"string"},"condition_notes":{"type":"string"},"provenance_summary":{"type":"string"},"identifying_marks":{"type":"string"}}},
+  "issuer_decision":{"type":"string"},
+  "issue_date":{"type":["string","null"],"format":"date"},
+  "verification_notes":{"type":"string"}
+ },
+ "allOf":[
+  {"if":{"properties":{"certificate_type":{"const":"signature_authentication"}}},"then":{"required":["signature_analysis"],"not":{"required":["provenance_dossier"]}}},
+  {"if":{"properties":{"certificate_type":{"const":"artifact_verification"}}},"then":{"required":["provenance_dossier"],"not":{"required":["signature_analysis"]}}},
+  {"if":{"properties":{"registry_status":{"const":"authenticated"}}},"then":{"properties":{"certificate_type":{"const":"signature_authentication"}}}},
+  {"if":{"properties":{"registry_status":{"const":"verified_artifact"}}},"then":{"properties":{"certificate_type":{"const":"artifact_verification"}}}}
+ ]
+}
