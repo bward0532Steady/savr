@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0B0D10">
+<title>SAVR | Certificate Verification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0B0D10;--gold:#D4AF37;--crimson:#8B0000;--green:#1E7E34;--silver:#C0C0C0;--ivory:#F9F6F0;--muted:#b6bcc4}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#25303b,#0B0D10 65%);color:#f5f5f5;font:400 14px/1.6 Montserrat,Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}.shell{max-width:790px;margin:auto;padding:18px 16px 55px}.brand{text-align:center;padding:19px 0 17px;border-bottom:1px solid #675528}.brandmark{font-size:clamp(54px,12vw,85px);font-weight:800;font-style:italic;letter-spacing:-7px;line-height:1;background:linear-gradient(130deg,#fff2c5 0%,#d4af37 37%,#fff4ca 55%,#a87516 100%);color:transparent;background-clip:text}.brand-sub{font-weight:700;letter-spacing:2px;font-size:clamp(9px,2vw,12px);color:var(--ivory)}.tagline{color:var(--gold);letter-spacing:1.4px;font-size:10px;margin-top:8px}.search{display:flex;gap:8px;margin:20px 0}.search input{flex:1;min-width:0;border:1px solid #8b7644;border-radius:8px;padding:13px;background:#1d2229;color:white}.search button,.action{background:linear-gradient(#f4d77b,#bd8e22);color:#101010;border:0;border-radius:8px;font-weight:800;padding:12px 17px}.examples{display:flex;gap:8px;flex-wrap:wrap;margin:-8px 0 18px}.examples button{border:1px solid #8b7644;color:#ead69e;background:#1d2229;border-radius:20px;padding:7px 12px;font-size:11px}.error{padding:14px;border:1px solid #9b5c5c;border-radius:8px;background:#381a1a}.hidden{display:none!important}.panel{background:var(--ivory);color:#19212a;border:3px solid var(--gold);outline:1px solid #80611c;outline-offset:-9px;border-radius:10px;padding:20px 17px;box-shadow:0 10px 36px #0008}.ribbon{background:linear-gradient(90deg,#450000,var(--crimson),#450000);color:white;text-align:center;padding:10px;margin:-3px -1px 15px;letter-spacing:1px;font-size:13px;font-weight:800;border:1px solid var(--gold)}.center{text-align:center}.serial{font-size:24px;font-weight:800;letter-spacing:1px}.pill{display:inline-block;background:var(--green);color:white;padding:6px 12px;border-radius:20px;font-weight:700;font-size:12px;margin:8px 0}.demo-pill{background:var(--crimson)}.photo{width:100%;max-width:320px;height:200px;background:#eee;margin:12px auto;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#666;border:1px dashed #ccc}.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0;text-align:left}.meta div{background:#f8f5ef;padding:8px;border-radius:6px}.meta strong{color:var(--gold);display:block;font-size:11px}.actions{display:flex;gap:8px;justify-content:center;margin:15px 0}.disclaimer{font-size:11px;color:#666;margin-top:15px;padding:10px;background:#f0f0f0;border-radius:6px}.report{margin-top:20px;text-align:left}.report h2{color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:5px}.report h3{color:#333;margin-top:15px}.print-footer{display:none}@media print{.search,.examples,.actions,.disclaimer{display:none}.print-footer{display:block;margin-top:20px;font-size:10px;color:#999}}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="brand">
+<div class="brandmark">SAVR</div>
+<div class="brand-sub">SIGNATURE ANALYSIS & VERIFICATION REGISTRY</div>
+<div class="tagline">EVERY SIGNATURE. A TRACEABLE RECORD.</div>
+</div>
+<form class="search" id="searchForm">
+<input id="serialInput" type="text" placeholder="Enter serial (e.g. SAVR-000001)" aria-label="Serial number">
+<button type="submit">VERIFY</button>
+</form>
+<div class="examples">
+<button type="button" data-sample="SAVR-000001">Music Demo</button>
+<button type="button" data-sample="SAVR-000002">Historical Demo</button>
+</div>
+<div id="error" class="error hidden"></div>
+<div id="result" class="hidden">
+<div class="panel">
+<div class="ribbon" id="ribbon">DEMONSTRATION — NOT VERIFIED</div>
+<div class="center">
+<div class="serial" id="serial"></div>
+<div class="pill demo-pill" id="statusPill">DEMO</div>
+<div class="photo" id="photoSlot">PHOTO PLACEHOLDER</div>
+</div>
+<div class="meta" id="meta"></div>
+<div class="actions">
+<button class="action" id="reportButton" aria-expanded="false">View Full Analysis Report</button>
+<button class="action" id="printButton">Print Certificate</button>
+</div>
+<div class="disclaimer" id="disclaimer"></div>
+<div class="report hidden" id="report"></div>
+</div>
+</div>
+</div>
+<script>
+const RECORDS = {
+'SAVR-000001': {
+schema_version: '1.1.0',
+serial_number: 'SAVR-000001',
+tamper_label_number: 'SAVR-T000001',
+certificate_type: 'signature_authentication',
+category: 'Music & Entertainment',
+registry_status: 'pending',
+is_demo: true,
+signer_creator: 'Demo Artist',
+item_description: 'Sample signed album cover — DEMONSTRATION ONLY',
+image_url: null,
+nfc_uid_hex: null,
+analysis_result: 'Demonstration placeholder — no real analysis performed',
+confidence_level: 'N/A',
+signature_analysis: {
+slant_angle: 'Demo value',
+flow_speed: 'Demo value',
+baseline_alignment: 'Demo value',
+terminal_strokes: 'Demo value',
+letterform_construction: 'Demo value',
+limitations: 'This is a fictional demonstration record.'
+},
+issuer_decision: 'Demonstration — Not a real authentication',
+issue_date: '2026-01-01',
+verification_notes: 'SAMPLE ONLY. Not a verified item. Do not use for authentication.'
+},
+'SAVR-000002': {
+schema_version: '1.1.0',
+serial_number: 'SAVR-000002',
+tamper_label_number: 'SAVR-T000002',
+certificate_type: 'artifact_verification',
+category: 'Historical & Cultural',
+registry_status: 'pending',
+is_demo: true,
+signer_creator: 'Demo Historical Figure',
+item_description: 'Sample historical document — DEMONSTRATION ONLY',
+image_url: null,
+nfc_uid_hex: null,
+analysis_result: 'Demonstration placeholder — no real verification performed',
+confidence_level: 'N/A',
+provenance_dossier: {
+era_date: 'Demo era',
+material_medium: 'Demo medium',
+condition_notes: 'Demo condition',
+provenance_summary: 'Fictional demonstration provenance.',
+identifying_marks: 'None — demo'
+},
+issuer_decision: 'Demonstration — Not a real verification',
+issue_date: '2026-01-01',
+verification_notes: 'SAMPLE ONLY. Not a verified artifact. Do not use for authentication.'
+}
+};
+function $(id){return document.getElementById(id)}
+function textEl(tag,text){const el=document.createElement(tag);el.textContent=text;return el}
+function render(id){
+ const r=RECORDS[id];
+ if(!r){
+  $('error').textContent='Record not found: '+id;
+  $('error').classList.remove('hidden');
+  $('result').classList.add('hidden');
+  return;
+ }
+ $('error').classList.add('hidden');
+ $('ribbon').textContent=r.is_demo?'DEMONSTRATION — NOT VERIFIED':'REGISTRY RECORD';
+ $('serial').textContent=r.serial_number;
+ $('statusPill').textContent=r.is_demo?'DEMO':'PENDING';
+ $('statusPill').className='pill '+(r.is_demo?'demo-pill':'');
+ const meta=$('meta');
+ meta.replaceChildren();
+ const fields=[
+  ['Category',r.category],
+  ['Type',r.certificate_type.replace('_',' ').toUpperCase()],
+  ['Signer / Creator',r.signer_creator],
+  ['Tamper Label',r.tamper_label_number],
+  ['Status',r.registry_status.toUpperCase()],
+  ['Issue Date',r.issue_date||'N/A']
+ ];
+ fields.forEach(([k,v])=>{const d=document.createElement('div');d.append(textEl('strong',k),textEl('span',v));meta.append(d)});
+ const slot=$('photoSlot');
+ slot.replaceChildren();
+ if(r.image_url){
+  const img=document.createElement('img');img.src=r.image_url;img.alt=r.item_description;img.style.maxWidth='100%';img.style.maxHeight='100%';slot.append(img);
+ }else{
+  const ph=textEl('div','PHOTO NOT PROVIDED');
+  ph.className='photo-placeholder';slot.append(ph);
+ }
+ $('disclaimer').textContent=r.is_demo?'SAMPLE ONLY: The displayed status and findings are fictional placeholders. This record does not authenticate an item.':'This certificate reflects the issuer’s documented decision, not an independent cryptographic proof of the NFC tag or physical item.';
+ $('printFooter').textContent='SAVR REGISTRY • '+r.serial_number+' • '+r.tamper_label_number+' • Verify the current record using its registered URL.';
+ const report=$('report');report.replaceChildren(textEl('h2',r.certificate_type==='artifact_verification'?'Artifact Provenance & Condition Dossier':'Five-Part Signature Comparison Report'));
+ const data=r.certificate_type==='artifact_verification'?r.provenance_dossier:r.signature_analysis;
+ const labels=r.certificate_type==='artifact_verification'?{era_date:'Era / Date',material_medium:'Material / Medium',condition_notes:'Condition Notes',provenance_summary:'Provenance Summary',identifying_marks:'Identifying Marks'}:{slant_angle:'Slant Angle',flow_speed:'Flow / Apparent Speed',baseline_alignment:'Baseline Alignment',terminal_strokes:'Terminal Strokes',letterform_construction:'Letterform Construction',limitations:'Analysis Limitations'};
+ for(const [key,label] of Object.entries(labels)){report.append(textEl('h3',label),textEl('p',data?.[key]||'Not documented'))}
+ report.append(textEl('h3','Registry Notes'),textEl('p',r.verification_notes||'None recorded'));
+ $('result').classList.remove('hidden');$('serialInput').value=id;
+}
+$('searchForm').addEventListener('submit',e=>{e.preventDefault();const id=$('serialInput').value.trim().toUpperCase();const u=new URL(location.href);u.searchParams.set('id',id);history.replaceState(null,'',u);render(id)});
+$('reportButton').addEventListener('click',()=>{const show=$('report').classList.contains('hidden');$('report').classList.toggle('hidden',!show);$('reportButton').setAttribute('aria-expanded',String(show));$('reportButton').textContent=show?'Hide Full Analysis Report':'View Full Analysis Report'});
+$('printButton').addEventListener('click',()=>window.print());
+document.querySelectorAll('[data-sample]').forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.sample;const u=new URL(location.href);u.searchParams.set('id',id);history.replaceState(null,'',u);render(id)}));
+const initial=new URLSearchParams(location.search).get('id');render(initial?initial.trim().toUpperCase():'SAVR-000001');
+</script>
+</body></html>
